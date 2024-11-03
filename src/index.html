@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>เกมแยกขยะ</title>
+  <style>
+    /* CSS สำหรับจัดตำแหน่ง */
+    body {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      margin: 0;
+      font-family: Arial, sans-serif;
+    }
+    #game-container {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+    .bin-container {
+      display: flex;
+      justify-content: space-between;
+      width: 80%;
+    }
+    .bin, .trash {
+      width: 100px;
+      height: 100px;
+      border: 2px solid #333;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      margin: 10px;
+      cursor: pointer;
+    }
+    .bin {
+      background-color: #f0f0f0;
+    }
+  </style>
+</head>
+<body>
+
+<div id="game-container">
+  <div class="trash" id="trash1" draggable="true">새우껍질</div>
+  <div class="trash" id="trash2" draggable="true">공깃밥</div>
+  
+  <div class="bin-container">
+    <div class="bin" id="general">일반쓰레기</div>
+    <div class="bin" id="food">음식물쓰레기</div>
+    <div class="bin" id="vinyl">비닐류</div>
+    <div class="bin" id="cans">캔 및 병류</div>
+    <div class="bin" id="plastic">플라스틱</div>
+    <div class="bin" id="battery">건전지</div>
+  </div>
+</div>
+
+<script>
+  // JavaScript สำหรับการลากและวาง
+  const trashItems = document.querySelectorAll('.trash');
+  const bins = document.querySelectorAll('.bin');
+
+  trashItems.forEach(trash => {
+    trash.addEventListener('dragstart', (e) => {
+      e.dataTransfer.setData('text', e.target.id);
+    });
+  });
+
+  bins.forEach(bin => {
+    bin.addEventListener('dragover', (e) => {
+      e.preventDefault();
+    });
+
+    bin.addEventListener('drop', (e) => {
+      const trashId = e.dataTransfer.getData('text');
+      const trashElement = document.getElementById(trashId);
+
+      if (isCorrectBin(trashId, bin.id)) {
+        bin.appendChild(trashElement);
+        alert('ถูกต้อง!');
+      } else {
+        alert('ลองใหม่!');
+      }
+    });
+  });
+
+  function isCorrectBin(trashId, binId) {
+    // ตรวจสอบความถูกต้องของถังขยะและประเภทขยะ
+    const correctBins = {
+      'trash1': 'general',
+      'trash2': 'food',
+      // เพิ่มข้อมูลตรงนี้สำหรับขยะที่ต้องการ
+    };
+    return correctBins[trashId] === binId;
+  }
+</script>
+
+</body>
+</html>
